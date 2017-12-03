@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yjy.springmybatistest.mapper.SysUserMapper">
+
+    <resultMap id="SysUserResultMap" type="com.yjy.springmybatistest.entity.SysUser">
+        <id property="id" column="id" />
+        <result property="userName" column="user_name" />
+        <result property="userPassword" column="user_password" />
+        <result property="userEmail" column="user_email" />
+        <result property="userinfo" column="user_info" />
+        <result property="headimg" column="head_img" jdbcType="BLOB" />
+        <result property="createTime" column="create_time"
+        jdbcType= "TIMESTAMP" />
+    </resultMap>
+    <select id="selectUserById" resultMap="SysUserResultMap" >
+      select * from sys_user where id = #{id}
+    </select>
+    <select id="selectUserAll" resultType="com.yjy.springmybatistest.entity.SysUser" >
+        select id,
+          user_name userName,
+          user_password userPassword ,
+          user_email userEmail,
+          user_info userinfo ,
+          head_img headimg,
+          create_time createTime
+          from sys_user
+    </select>
+    <select id="selectRolesByUserId" resultType="com.yjy.springmybatistest.entity.SysRole" >
+        SELECT r.id  id,
+        r.role_name roleName,
+        r.enable enable,
+        r.create_by createBy,
+        r.create_time createTime,
+        u.user_name as "sysUser.userName",
+        u.user_email as "sysUser.userEmail"
+        FROM SYS_USER u ,SYS_USER_ROLE ur,SYS_ROLE r
+        WHERE  u.id = ur.user_id and ur.role_id = r.id and u.id=#{id}
+    </select>
+    <insert id="addUser">
+        INSERT INTO Sys_User(id,user_name,user_password,user_email,user_info,head_img,create_time)
+        VALUES (#{id},#{userName},#{userPassword},#{userEmail},#{userinfo},
+                #{headimg,jdbcType=BLOB},#{createTime,jdbcType=TIMESTAMP })
+    </insert>
+
+    <!--执行完添加之后返回自增主键-->
+    <insert id="addUser2" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Sys_User(id,user_name,user_password,user_email,user_info,head_img,create_time)
+        VALUES (#{id},#{userName},#{userPassword},#{userEmail},#{userinfo},
+        #{headimg,jdbcType=BLOB},#{createTime,jdbcType=TIMESTAMP })
+    </insert>
+    <insert id="addUser3"  >
+        INSERT INTO Sys_User(id,user_name,user_password,user_email,user_info,head_img,create_time)
+        VALUES (#{id},#{userName},#{userPassword},#{userEmail},#{userinfo},
+        #{headimg,jdbcType=BLOB},#{createTime,jdbcType=TIMESTAMP })
+
+        <selectKey keyColumn="id" resultType="long" keyProperty="id" order="AFTER" >
+        SELECT LAST INSERT ID ()
+        </selectKey>
+    </insert>
+
+    <update id="updateById">
+    update sys_user
+    set user_name= #{userName} ,
+    user_password= #{userPassword},
+    user_email = #{userEmail} ,
+    user_info= #{userinfo} ,
+    head_img = #{headimg , jdbcType=BLOB} ,
+    create_time = #{createTime , jdbcType=TIMESTAMP}
+    where id = #{id}
+    </update>
+
+    <delete id="deleteById" >
+        delete from sys user where id = #{id}
+    </delete >
+
+    <select id="selectRolesByUseridAndRoleEnable" resultType="com.yjy.springmybatistest.entity.SysRole" >
+    select
+    r.id,
+    r.role_name roleName ,
+    r.enable ,
+    r.create_by createBy ,
+    r.create_time createTime
+    from sys_user u
+    inner join sys_user_role ur on u.id = ur.user_id
+    inner join sys_role r on ur.role_id = r.id
+    where u.id = #{userId} and r.enable = #{enable}
+</select>
+
+</mapper>

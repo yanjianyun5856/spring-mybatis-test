@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <context id="TsetTables">
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/mybatistestdb"
+                        userId="root" password="" />
+
+        <!-- java 模型对象生成器 -->
+        <javaModelGenerator targetPackage="com.yjy.springmybatistest.entity2"
+                            targetProject="${user.dir}/src/main/java" />
+        <!-- sql mapper xml 生成器 -->
+        <sqlMapGenerator targetPackage="mybatis.mappers2" targetProject="${user.dir}/src/main/resources" />
+        <!-- sql mapper java 接口 -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.yjy.springmybatistest.mapper"  targetProject="${user.dir}/src/main/java">
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+
+        <table tableName="user">
+             <generatedKey column="id" sqlStatement="mysql" identity="true" />
+             <columnOverride column="name" property="name" />
+             <columnOverride column="age" property="age" />
+        </table>
+    </context>
+    
+</generatorConfiguration>
