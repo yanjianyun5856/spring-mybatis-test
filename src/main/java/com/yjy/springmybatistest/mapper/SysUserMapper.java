@@ -31,4 +31,18 @@ public interface SysUserMapper {
     List<SysRole> selectRolesByUseridAndRoleEnable(
             @Param("userId") Long userId ,
             @Param("enable") Integer enable ) ;
+
+    /**
+     * 根据动态条件查询用户信息
+     * @param sysUser
+     * @return
+     */
+    List<SysUser> selectByUser(SysUser sysUser);
+
+    /**
+     * 根据用户 id 或用户名查询
+     * @param sysUser
+     * @return
+     */
+    SysUser selectByidOrUserName(SysUser sysUser) ;
 }

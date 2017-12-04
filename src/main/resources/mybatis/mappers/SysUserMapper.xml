@@ -89,4 +89,45 @@
     where u.id = #{userId} and r.enable = #{enable}
 </select>
 
+    <select id="selectByUser" resultType="com.yjy.springmybatistest.entity.SysUser"  >
+    select id,
+    user_name userName ,
+    user_password userPassword ,
+    user_email userEmai1 ,
+    user_info userinfo ,
+    head_img headimg ,
+    create_time createTime
+    from sys_user
+    where 1 = 1
+    <if test="userName != null and userName !='' ">
+      and user_name like concat  ('%',#{userName},'%')
+    </if>
+    <if test="userEmail != null and userEmail !='' " >
+        and user_email = #{userEmail}
+    </if>
+    </select>
+
+
+    <select id="selectByidOrUserName" resultType="com.yjy.springmybatistest.entity.SysUser"  >
+    select id,
+    user_name userName ,
+    user_password userPassword ,
+    user_email userEmail ,
+    user_info userinfo ,
+    head_img headimg ,
+    create_time createTime
+    from sys_user
+    where 1 = 1
+    <choose>
+        <when test="id != null" >
+          and id= #{id}
+        </when >
+        <when test="userName != null and userName !='' ">
+          and user_name = #{userName}
+        </when>
+        <otherwise>
+         and 1 = 2
+        </otherwise>
+    </choose>
+    </select>
 </mapper>

@@ -180,4 +180,57 @@ public class SysUserMappertTest extends BaseMapperTest {
                 sqlSession.close();
         }
     }
+
+    @Test
+    public void testSelectByUser() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            SysUserMapper userMapper = sqlSession.getMapper(SysUserMapper.class);
+            //只查询用户名时
+            SysUser query = new SysUser();
+            query.setUserName("ad");
+            List<SysUser> userList = userMapper.selectByUser(query);
+            Assert.assertTrue(userList.size() > 0);
+            //只查询用户邮箱时
+            query = new SysUser();
+            query.setUserEmail("test@mybatis.tk");
+            userList = userMapper.selectByUser(query);
+            Assert.assertTrue(userList.size() > 0);
+            // 当同时查询用户名和邮箱时
+            query = new SysUser();
+            query.setUserName("ad");
+            query.setUserEmail("test@mybatis.tk");
+            userList = userMapper.selectByUser(query);
+            // 由于没有同时符合这两个条件的用户 ，因此查询结采数为 0
+            Assert.assertTrue(userList.size() == 0);
+        } finally {
+            //不要忘记关闭 sqlSession
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectByidOrUserName( ) {
+        SqlSession sqlSession = getSqlSession ();
+        try {
+            SysUserMapper userMapper = sqlSession.getMapper(SysUserMapper.class);
+            //只查询用户名时
+            SysUser query = new SysUser();
+            query.setId(1L);
+            query.setUserName("admin");
+            SysUser user = userMapper.selectByidOrUserName(query);
+            Assert.assertNotNull(user);
+            //当没有id 时
+            query.setId(null);
+            user = userMapper.selectByidOrUserName(query);
+            Assert.assertNotNull(user);
+            //当id 和 name 都为空时
+            query.setUserName(null);
+            user = userMapper.selectByidOrUserName(query);
+            Assert.assertNull(user);
+        } finally {
+            //不要忘记关闭 sqlSession
+            sqlSession.close() ;
+        }
+    }
 }
